@@ -1,0 +1,21 @@
+services:
+  minibot:
+    build: .
+    image: minibot:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - LOG_LEVEL=info
+    volumes:
+      - minibot_data:/app/data
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+volumes:
+  minibot_data:
+    driver: local
