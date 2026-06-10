@@ -3,7 +3,8 @@ import { z } from 'zod';
 
 const envSchema = z.object({
   TELEGRAM_BOT_TOKEN: z.string().min(1, 'TELEGRAM_BOT_TOKEN is required'),
-  GEMINI_API_KEY: z.string().min(1, 'GEMINI_API_KEY is required'),
+  GOOGLE_CLOUD_PROJECT: z.string().min(1, 'GOOGLE_CLOUD_PROJECT is required'),
+  GOOGLE_CLOUD_LOCATION: z.string().default('us-central1'),
   DATABASE_URL: z.string().default('./data/minibot.db'),
   ALLOWED_USER_IDS: z
     .string()
@@ -16,7 +17,7 @@ const envSchema = z.object({
             .filter(Boolean)
         : [],
     ),
-  GEMINI_MODEL: z.string().default('gemini-2.0-flash'),
+  GEMINI_MODEL: z.string().default('gemini-3.0-flash'),
   MAX_HISTORY_MESSAGES: z.coerce.number().int().min(1).max(100).default(20),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),

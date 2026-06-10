@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yarn remove *)",
+      "Bash(yarn add *)",
+      "Bash(yarn typecheck *)",
+      "Bash(grep -E '\\\\.\\(md|ts|js|json|env\\)$')"
+    ]
+  }
+}
