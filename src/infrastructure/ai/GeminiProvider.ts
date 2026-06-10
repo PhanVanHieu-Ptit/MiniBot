@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from '@google/generative-ai';
+import { VertexAI, HarmCategory, HarmBlockThreshold } from '@google-cloud/vertexai';
 import type { IAIProvider } from '../../core/interfaces/IAIProvider.js';
 import type { ILogger } from '../../core/interfaces/ILogger.js';
 import type { Config } from '../../config/index.js';
@@ -39,12 +39,18 @@ export class GeminiProvider implements IAIProvider {
   private readonly model;
   private readonly logger: ILogger;
 
-  constructor(config: Pick<Config, 'GEMINI_API_KEY' | 'GEMINI_MODEL'>, logger: ILogger) {
+  constructor(
+    config: Pick<Config, 'GOOGLE_CLOUD_PROJECT' | 'GOOGLE_CLOUD_LOCATION' | 'GEMINI_MODEL'>,
+    logger: ILogger,
+  ) {
     this.logger = logger;
-    const genAI = new GoogleGenerativeAI(config.GEMINI_API_KEY);
-    this.model = genAI.getGenerativeModel({
+    const vertexAI = new VertexAI({
+      project: config.GOOGLE_CLOUD_PROJECT,
+      location: config.GOOGLE_CLOUD_LOCATION,
+    });
+    this.model = vertexAI.getGenerativeModel({
       model: config.GEMINI_MODEL,
-      systemInstruction: SYSTEM_INSTRUCTION,
+      systemInstruction: { role: 'system', parts: [{ text: SYSTEM_INSTRUCTION }] },
       safetySettings: SAFETY_SETTINGS,
     });
   }
@@ -63,7 +69,7 @@ export class GeminiProvider implements IAIProvider {
           return `I can't respond to that (blocked: ${response.promptFeedback.blockReason}).`;
         }
 
-        const text = response.text();
+        const text = response.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
         return text || "I couldn't generate a response. Please try again.";
       },
       {
@@ -84,7 +90,7 @@ export class GeminiProvider implements IAIProvider {
     });
 
     for await (const chunk of result.stream) {
-      const text = chunk.text();
+      const text = chunk.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
       if (text) yield text;
     }
   }
