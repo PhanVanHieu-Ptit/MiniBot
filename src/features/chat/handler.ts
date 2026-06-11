@@ -93,7 +93,7 @@ export function createChatHandler(
     const chatId = ctx.chat?.id;
     if (!chatId) return;
 
-    const userMessageId = ctx.message?.message_id;
+    const userMessageId = ctx.message.message_id;
     const initialEmoji = pickReactionEmoji(text);
 
     const updateReaction = (emoji: string) => {

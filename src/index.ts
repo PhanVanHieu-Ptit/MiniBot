@@ -20,8 +20,8 @@ async function main() {
       .catch(() => process.exit(1));
   };
 
-  process.once('SIGINT', () => shutdown('SIGINT'));
-  process.once('SIGTERM', () => shutdown('SIGTERM'));
+  process.once('SIGINT', () => { shutdown('SIGINT'); });
+  process.once('SIGTERM', () => { shutdown('SIGTERM'); });
 
   logger.info('Starting MiniBot...');
   await bot.start({
