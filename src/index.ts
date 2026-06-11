@@ -3,7 +3,7 @@ import { buildContainer } from './container/index.js';
 import { createBot } from './bot/index.js';
 
 async function main() {
-  const container = buildContainer(config);
+  const container = await buildContainer(config);
   const { logger } = container;
 
   const bot = createBot(container);
@@ -13,7 +13,11 @@ async function main() {
     // Force exit after 5s if graceful stop hangs
     const timer = setTimeout(() => process.exit(1), 5000);
     timer.unref();
-    bot.stop().then(() => process.exit(0)).catch(() => process.exit(1));
+    bot
+      .stop()
+      .then(() => container.close())
+      .then(() => process.exit(0))
+      .catch(() => process.exit(1));
   };
 
   process.once('SIGINT', () => shutdown('SIGINT'));

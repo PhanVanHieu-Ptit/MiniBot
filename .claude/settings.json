@@ -35,7 +35,9 @@
       "Read(//proc/85511/**)",
       "Read(//Users/phanvanhieu/.openclaw/**)",
       "Bash(node -e \"const g = require\\('/Users/phanvanhieu/Documents/CaNhan/MyProject/MiniBot/node_modules/grammy'\\); console.log\\(Object.keys\\(g\\).filter\\(k => k.includes\\('Reaction'\\) || k.includes\\('Emoji'\\)\\)\\)\")",
-      "Bash(git fetch *)"
+      "Bash(git fetch *)",
+      "Bash(npm approve-scripts *)",
+      "Bash(DATABASE_URL=\"postgresql://localhost:5432/minibot\" npm run db:generate)"
     ],
     "additionalDirectories": [
       "/Users/phanvanhieu/.claude"

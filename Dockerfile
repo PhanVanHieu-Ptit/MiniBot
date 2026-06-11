@@ -18,10 +18,7 @@ COPY package*.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 
 COPY --from=builder /app/dist ./dist
-COPY src/infrastructure/db/migrations ./dist/infrastructure/db/migrations
-
-RUN mkdir -p /app/data
-
-VOLUME ["/app/data"]
+# Copy migration SQL files alongside compiled JS so the auto-migrator finds them at runtime
+COPY --from=builder /app/src/infrastructure/db/migrations ./dist/infrastructure/db/migrations
 
 CMD ["node", "dist/index.js"]

@@ -1,19 +1,11 @@
-import Database from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
-import { mkdirSync } from 'fs';
-import { dirname } from 'path';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import postgres from 'postgres';
 import { config } from '../../config/index.js';
 
-const dbPath = config.DATABASE_URL;
-mkdirSync(dirname(dbPath), { recursive: true });
+const sql = postgres(config.DATABASE_URL);
+const db = drizzle(sql);
 
-const sqlite = new Database(dbPath);
-sqlite.pragma('journal_mode = WAL');
-sqlite.pragma('foreign_keys = ON');
-
-const db = drizzle(sqlite);
-
-migrate(db, { migrationsFolder: './src/infrastructure/db/migrations' });
+await migrate(db, { migrationsFolder: './src/infrastructure/db/migrations' });
 console.error('Migrations applied successfully.');
-sqlite.close();
+await sql.end();
