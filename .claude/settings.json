@@ -33,7 +33,8 @@
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('hooks', {}\\), indent=2\\)\\)\")",
       "Bash(# Check worker threads of openclaw via proc \\(macOS alternative\\) *)",
       "Read(//proc/85511/**)",
-      "Read(//Users/phanvanhieu/.openclaw/**)"
+      "Read(//Users/phanvanhieu/.openclaw/**)",
+      "Bash(node -e \"const g = require\\('/Users/phanvanhieu/Documents/CaNhan/MyProject/MiniBot/node_modules/grammy'\\); console.log\\(Object.keys\\(g\\).filter\\(k => k.includes\\('Reaction'\\) || k.includes\\('Emoji'\\)\\)\\)\")"
     ],
     "additionalDirectories": [
       "/Users/phanvanhieu/.claude"

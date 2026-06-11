@@ -1,4 +1,5 @@
 import type { Context } from 'grammy';
+import type { ReactionTypeEmoji } from 'grammy/types';
 import type { ChatService } from './service.js';
 import type { Config } from '../../config/index.js';
 import type { ILogger } from '../../core/interfaces/ILogger.js';
@@ -98,7 +99,7 @@ export function createChatHandler(
     const updateReaction = (emoji: string) => {
       if (!userMessageId) return;
       ctx.api
-        .setMessageReaction(chatId, userMessageId, [{ type: 'emoji', emoji }])
+        .setMessageReaction(chatId, userMessageId, [{ type: 'emoji', emoji: emoji as ReactionTypeEmoji['emoji'] }])
         .catch(() => {});
     };
 
