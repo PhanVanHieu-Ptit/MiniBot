@@ -6,6 +6,8 @@ export interface RetryOptions {
 }
 
 const RETRYABLE_NETWORK_CODES = new Set(['ECONNRESET', 'ETIMEDOUT', 'ENOTFOUND', 'ECONNREFUSED']);
+// PG: 57P03=cannot_connect_now, 08006=connection_failure, 40001=serialization_failure, 40P01=deadlock
+const RETRYABLE_PG_CODES = new Set(['57P03', '08006', '40001', '40P01']);
 const NON_RETRYABLE_HTTP_STATUSES = new Set([400, 401, 403, 404]);
 
 function isRetryable(err: unknown): boolean {
@@ -13,8 +15,7 @@ function isRetryable(err: unknown): boolean {
 
   const nodeErr = err as NodeJS.ErrnoException;
   if (nodeErr.code !== undefined && RETRYABLE_NETWORK_CODES.has(nodeErr.code)) return true;
-
-  if (nodeErr.code === 'SQLITE_BUSY') return true;
+  if (nodeErr.code !== undefined && RETRYABLE_PG_CODES.has(nodeErr.code)) return true;
 
   const httpErr = err as { status?: number };
   if (httpErr.status !== undefined) {

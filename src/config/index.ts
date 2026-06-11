@@ -5,7 +5,7 @@ const envSchema = z.object({
   TELEGRAM_BOT_TOKEN: z.string().min(1, 'TELEGRAM_BOT_TOKEN is required'),
   GOOGLE_CLOUD_PROJECT: z.string().min(1, 'GOOGLE_CLOUD_PROJECT is required'),
   GOOGLE_CLOUD_LOCATION: z.string().default('us-central1'),
-  DATABASE_URL: z.string().default('./data/minibot.db'),
+  DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
   ALLOWED_USER_IDS: z
     .string()
     .optional()

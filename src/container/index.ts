@@ -14,12 +14,13 @@ export interface Container {
   aiProvider: GeminiProvider;
   chatService: ChatService;
   config: Config;
+  close: () => Promise<void>;
 }
 
-export function buildContainer(config: Config): Container {
+export async function buildContainer(config: Config): Promise<Container> {
   const logger = new PinoLogger(config);
 
-  const db = createDbClient(config);
+  const { db, close } = await createDbClient(config);
 
   const userRepo = new UserRepository(db, logger.child({ service: 'UserRepository' }));
   const messageRepo = new MessageRepository(db, logger.child({ service: 'MessageRepository' }));
@@ -34,5 +35,5 @@ export function buildContainer(config: Config): Container {
     config,
   });
 
-  return { logger, userRepo, messageRepo, aiProvider, chatService, config };
+  return { logger, userRepo, messageRepo, aiProvider, chatService, config, close };
 }

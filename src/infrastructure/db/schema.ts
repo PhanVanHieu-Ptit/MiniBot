@@ -1,26 +1,21 @@
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { sql } from 'drizzle-orm';
+import { bigint, integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 
-export const users = sqliteTable('users', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  telegramId: integer('telegram_id').notNull().unique(),
+export const users = pgTable('users', {
+  id: serial('id').primaryKey(),
+  telegramId: bigint('telegram_id', { mode: 'number' }).notNull().unique(),
   username: text('username'),
   firstName: text('first_name'),
-  createdAt: text('created_at')
-    .notNull()
-    .default(sql`(datetime('now'))`),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const messages = sqliteTable('messages', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
+export const messages = pgTable('messages', {
+  id: serial('id').primaryKey(),
   userId: integer('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  role: text('role', { enum: ['user', 'model'] }).notNull(),
+  role: text('role').$type<'user' | 'model'>().notNull(),
   content: text('content').notNull(),
-  createdAt: text('created_at')
-    .notNull()
-    .default(sql`(datetime('now'))`),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
 export type UserRow = typeof users.$inferSelect;

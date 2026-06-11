@@ -1,26 +1,21 @@
-import Database from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
-import { mkdirSync } from 'fs';
+import { drizzle, type PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
+import postgres from 'postgres';
 import type { Config } from '../../config/index.js';
 import * as schema from './schema.js';
 
-export function createDbClient(config: Pick<Config, 'DATABASE_URL'>) {
-  const dbPath = config.DATABASE_URL;
-  mkdirSync(dirname(dbPath), { recursive: true });
+export type DB = PostgresJsDatabase<typeof schema>;
 
-  const sqlite = new Database(dbPath);
-  sqlite.pragma('journal_mode = WAL');
-  sqlite.pragma('foreign_keys = ON');
-
-  const db = drizzle(sqlite, { schema });
+export async function createDbClient(
+  config: Pick<Config, 'DATABASE_URL'>,
+): Promise<{ db: DB; close: () => Promise<void> }> {
+  const sql = postgres(config.DATABASE_URL, { max: 10 });
+  const db = drizzle(sql, { schema });
 
   const migrationsFolder = resolve(dirname(fileURLToPath(import.meta.url)), 'migrations');
-  migrate(db, { migrationsFolder });
+  await migrate(db, { migrationsFolder });
 
-  return db;
+  return { db, close: () => sql.end() };
 }
-
-export type DB = ReturnType<typeof createDbClient>;

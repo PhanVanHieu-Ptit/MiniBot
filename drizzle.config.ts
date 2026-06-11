@@ -4,8 +4,8 @@ import { defineConfig } from 'drizzle-kit';
 export default defineConfig({
   schema: './src/infrastructure/db/schema.ts',
   out: './src/infrastructure/db/migrations',
-  dialect: 'sqlite',
+  dialect: 'postgresql',
   dbCredentials: {
-    url: process.env['DATABASE_URL'] ?? './data/minibot.db',
+    url: process.env['DATABASE_URL'] ?? 'postgresql://localhost:5432/minibot',
   },
 });
