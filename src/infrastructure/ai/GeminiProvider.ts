@@ -109,7 +109,7 @@ export class GeminiProvider implements IAIProvider {
           return `I can't respond to that (blocked: ${response.promptFeedback.blockReason}).`;
         }
 
-        const text = response.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+        const text = response.candidates?.[0]?.content.parts[0]?.text ?? '';
         return text || "I couldn't generate a response. Please try again.";
       },
       {
@@ -130,7 +130,7 @@ export class GeminiProvider implements IAIProvider {
     });
 
     for await (const chunk of result.stream) {
-      const text = chunk.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+      const text = chunk.candidates?.[0]?.content.parts[0]?.text ?? '';
       if (text) yield text;
     }
   }
