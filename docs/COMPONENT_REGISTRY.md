@@ -7,7 +7,7 @@
 
 | File | Purpose |
 |---|---|
-| `src/index.ts` | Process entry. Loads config, builds container, starts bot, registers shutdown hooks |
+| `src/index.ts` | Process entry. Loads config, builds container, starts bot. Graceful shutdown on SIGINT/SIGTERM with 5 s force-exit fallback |
 | `src/config/index.ts` | Zod-validated env config. Exits process on invalid env |
 | `src/container/index.ts` | Manual DI. Constructs all services and wires dependencies |
 
@@ -41,7 +41,7 @@
 |---|---|
 | `chat/types.ts` | `ChatContext` DTO — input to ChatService |
 | `chat/service.ts` | `ChatService` — orchestrates user upsert, history load, AI call, history save |
-| `chat/handler.ts` | grammy handler factory — rate check, streaming, throttled edits, message split |
+| `chat/handler.ts` | grammy handler factory — rate check, emoji reaction, typing indicator, streaming, throttled edits, Markdown fallback, message split, error logging |
 | `commands/start.ts` | `/start` handler — upserts user, sends greeting |
 | `commands/help.ts` | `/help` handler — static help message |
 | `commands/reset.ts` | `/reset` handler — deletes user's message history |
@@ -75,7 +75,7 @@ Exports: `MessageRole`, `ChatMessage`, `User`
 | `GOOGLE_CLOUD_LOCATION` | `us-central1` | `GeminiProvider` |
 | `DATABASE_URL` | `./data/minibot.db` | `db/client.ts` |
 | `ALLOWED_USER_IDS` | `[]` | `middlewares/auth.ts` |
-| `GEMINI_MODEL` | `gemini-3.0-flash` | `GeminiProvider` |
+| `GEMINI_MODEL` | `gemini-2.5-flash` | `GeminiProvider` |
 | `MAX_HISTORY_MESSAGES` | `20` | `ChatService` |
 | `STREAM_THROTTLE_MS` | `800` | `chat/handler.ts` |
 | `NODE_ENV` | `development` | `PinoLogger` |

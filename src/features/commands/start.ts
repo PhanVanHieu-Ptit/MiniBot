@@ -14,11 +14,11 @@ export function createStartCommand(userRepo: IUserRepository) {
 
     const name = from.first_name;
     await ctx.reply(
-      `Hi ${name}! I'm MiniBot, your AI assistant powered by Gemini.\n\n` +
-        'Just send me a message to chat.\n\n' +
-        'Commands:\n' +
-        '/help — show this help\n' +
-        '/reset — clear conversation history',
+      `Chào sếp ${name}! Em là MiniBot — trợ lý AI của sếp, chạy bằng Gemini ạ.\n\n` +
+        'Sếp cứ nhắn gì em cũng trả lời nhé!\n\n' +
+        'Lệnh:\n' +
+        '/help — xem hướng dẫn\n' +
+        '/reset — xoá lịch sử trò chuyện',
     );
   };
 }

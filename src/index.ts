@@ -8,14 +8,16 @@ async function main() {
 
   const bot = createBot(container);
 
-  process.once('SIGINT', () => {
-    logger.info('SIGINT received, stopping bot');
-    void bot.stop();
-  });
-  process.once('SIGTERM', () => {
-    logger.info('SIGTERM received, stopping bot');
-    void bot.stop();
-  });
+  const shutdown = (signal: string) => {
+    logger.info(`${signal} received, stopping bot`);
+    // Force exit after 5s if graceful stop hangs
+    const timer = setTimeout(() => process.exit(1), 5000);
+    timer.unref();
+    bot.stop().then(() => process.exit(0)).catch(() => process.exit(1));
+  };
+
+  process.once('SIGINT', () => shutdown('SIGINT'));
+  process.once('SIGTERM', () => shutdown('SIGTERM'));
 
   logger.info('Starting MiniBot...');
   await bot.start({

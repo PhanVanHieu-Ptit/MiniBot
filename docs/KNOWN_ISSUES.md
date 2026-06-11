@@ -80,29 +80,21 @@ Both files independently open the DB, set `journal_mode = WAL`, set `foreign_key
 
 ---
 
-## [MEDIUM] Streaming errors are silently dropped
+## ~~[MEDIUM] Streaming errors are silently dropped~~ — RESOLVED
 
-**File:** `src/features/chat/handler.ts`
+**Resolved in:** `add-context` branch
 
-```ts
-} catch {
-  await ctx.api.editMessageText(...).catch(() => ctx.reply(...));
-}
-```
-
-Errors thrown during stream processing are caught and converted to a user-facing message with no logging. Diagnosing production failures requires guessing.
-
-**Fix:** Log the error with context (`userId`, `updateId`, `error.message`, `stack`) before replying to the user.
+`catch` block now calls `logger.error(...)` with `userId`, `error.message`, and `stack` before replying to the user. Reaction is also set to `😔` on error.
 
 ---
 
-## [MEDIUM] `parse_mode: 'Markdown'` is fragile
+## [LOW] `parse_mode: 'Markdown'` is fragile
 
-**File:** `src/features/chat/handler.ts` (lines 63, 65)
+**File:** `src/features/chat/handler.ts`
 
-Telegram's Markdown v1 fails silently when AI-generated content contains unbalanced tokens (`*`, `_`, `` ` ``). The `editMessageText` call will throw, caught by the outer `catch {}`.
+Telegram's Markdown v1 fails when AI-generated content contains unbalanced tokens (`*`, `_`, `` ` ``). Partial fix in place: both `editMessageText` and `ctx.reply` now `.catch()` the Markdown call and retry without `parse_mode`, so the message is delivered as plaintext rather than failing silently.
 
-**Fix:** Switch to `parse_mode: 'HTML'` and sanitize output, or use `MarkdownV2` with proper escaping. Alternatively, send without `parse_mode` and accept plaintext.
+**Remaining risk:** The plaintext fallback loses all formatting. Full fix would be switching to `parse_mode: 'HTML'` with output sanitization, or `MarkdownV2` with proper escaping.
 
 ---
 
@@ -152,8 +144,8 @@ If Telegram delivers the same update twice (retry on timeout), `insertMany` will
 
 ---
 
-## [UNCERTAIN] `GEMINI_MODEL` default value
+## ~~[UNCERTAIN] `GEMINI_MODEL` default value~~ — RESOLVED
 
-**File:** `src/config/index.ts`
+**Resolved in:** `add-context` branch
 
-Default is `gemini-3.0-flash`. As of the knowledge cutoff, the Vertex AI model catalog does not include this name. The likely intended value is `gemini-2.0-flash` or `gemini-1.5-flash`. **Verify against your GCP project's available models.**
+Default changed from `gemini-3.0-flash` to `gemini-2.5-flash` in `src/config/index.ts`.

@@ -17,7 +17,7 @@ const envSchema = z.object({
             .filter(Boolean)
         : [],
     ),
-  GEMINI_MODEL: z.string().default('gemini-3.0-flash'),
+  GEMINI_MODEL: z.string().default('gemini-2.5-flash'),
   MAX_HISTORY_MESSAGES: z.coerce.number().int().min(1).max(100).default(20),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),

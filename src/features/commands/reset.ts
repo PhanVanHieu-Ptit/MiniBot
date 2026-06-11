@@ -12,6 +12,6 @@ export function createResetCommand(userRepo: IUserRepository, messageRepo: IMess
       await messageRepo.deleteByUserId(user.id);
     }
 
-    await ctx.reply("Conversation history cleared. Let's start fresh!");
+    await ctx.reply('Em đã xoá lịch sử trò chuyện rồi ạ! Mình bắt đầu lại từ đầu nhé sếp!');
   };
 }
