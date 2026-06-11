@@ -20,7 +20,7 @@ export function createBot(container: Container) {
   bot.command('start', createStartCommand(userRepo));
   bot.command('help', helpCommand);
   bot.command('reset', createResetCommand(userRepo, messageRepo));
-  bot.on('message:text', createChatHandler(chatService, config));
+  bot.on('message:text', createChatHandler(chatService, config, logger));
 
   return bot;
 }

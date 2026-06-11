@@ -4,7 +4,39 @@
       "Bash(yarn remove *)",
       "Bash(yarn add *)",
       "Bash(yarn typecheck *)",
-      "Bash(grep -E '\\\\.\\(md|ts|js|json|env\\)$')"
+      "Bash(grep -E '\\\\.\\(md|ts|js|json|env\\)$')",
+      "Bash(ls ~/.claude/commands/ 2>/dev/null && echo \"---\" && ls /Users/phanvanhieu/Documents/CaNhan/MyProject/MiniBot/.claude/commands/ 2>/dev/null || echo \"none\")",
+      "Read(//Users/phanvanhieu/.claude/**)",
+      "Bash(mkdir -p ~/.claude/commands)",
+      "Bash(yarn --version)",
+      "Bash(yarn install *)",
+      "Bash(nvm list *)",
+      "Bash(node -e \"console.log\\(JSON.parse\\(require\\('fs'\\).readFileSync\\('package.json','utf8'\\)\\).engines?.node || 'not specified'\\)\")",
+      "Bash(npm show *)",
+      "Bash(ps -p 84641 -o pid,ppid,stat,command)",
+      "Bash(ps -p 84640 -o pid,ppid,stat,command)",
+      "Bash(pstree -p 80359)",
+      "Bash(ps -eo pid,ppid,command)",
+      "Bash(awk -v pid=80359 '$2==pid {print}')",
+      "Bash(ps -p 85511 -o pid,ppid,stat,start,command)",
+      "Bash(curl -s \"https://api.telegram.org/bot8098002219:AAHIRaY-1tcn1hMaGPoqS0-m5Bs5eTMdq2o/getUpdates?offset=-1&timeout=0&limit=1\")",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s 'https://api.telegram.org/bot8098002219:AAHIRaY-1tcn1hMaGPoqS0-m5Bs5eTMdq2o/getUpdates?offset=-1&timeout=0&limit=1')",
+      "Bash(echo \"raw: $\\(curl -s 'https://api.telegram.org/bot8098002219:AAHIRaY-1tcn1hMaGPoqS0-m5Bs5eTMdq2o/getUpdates?offset=-1&timeout=0&limit=1'\\)\")",
+      "Bash(awk '$2==85511 {print}')",
+      "Bash(ps -p 86785 -o pid,ppid,stat,start,command)",
+      "Bash(ps -p 86784 -o pid,ppid,stat,start,command)",
+      "Bash(awk '$2==86785 {print \"child: \" $0}')",
+      "Bash(ps -p 85617 -o pid,ppid,stat,start,command)",
+      "Bash(env)",
+      "Bash(curl -s --proxy \"http://localhost:18789\" \"https://api.telegram.org/bot8098002219:AAHIRaY-1tcn1hMaGPoqS0-m5Bs5eTMdq2o/getMe\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('hooks', {}\\), indent=2\\)\\)\")",
+      "Bash(# Check worker threads of openclaw via proc \\(macOS alternative\\) *)",
+      "Read(//proc/85511/**)",
+      "Read(//Users/phanvanhieu/.openclaw/**)"
+    ],
+    "additionalDirectories": [
+      "/Users/phanvanhieu/.claude"
     ]
   }
 }

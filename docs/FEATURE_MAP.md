@@ -24,11 +24,16 @@ grammy Bot.on('message:text')
 [middleware] auth.ts      → blocks if userId not in ALLOWED_USER_IDS
   ↓
 chat/handler.ts
-  ├── rateLimiter.isAllowed(userId)  → 429-like reply if exceeded
+  ├── rateLimiter.isAllowed(userId)  → Vietnamese rate-limit reply if exceeded
+  ├── setMessageReaction(initialEmoji)  → immediate emoji reaction on user msg
+  ├── sendChatAction('typing')       → typing indicator (refreshed every 4 s)
   ├── ctx.reply("...")               → send placeholder
   ├── chatService.chatStream(ctx)    → AsyncGenerator<chunk>
   ├── [loop] accumulate + throttled editMessageText every STREAM_THROTTLE_MS
-  └── final edit with full text (Markdown) or sendMessage for overflow chunks
+  ├── final edit with full text (Markdown, fallback plaintext) or split messages
+  └── setMessageReaction(completionEmoji)  → update reaction to "done" state
+  [finally] clearInterval(typingInterval)
+  [on error] logger.error(...) + reaction '😔' + Vietnamese error reply
 ```
 
 ## Rate Limits
@@ -42,7 +47,7 @@ chat/handler.ts
 ## AI Context Window per Request
 
 ```
-[system prompt: "You are a helpful, concise AI assistant."]
+[system prompt: Vietnamese persona — xưng em/sếp, emoji-first responses]
 + [last MAX_HISTORY_MESSAGES messages from DB]
 + [current user message]
 ```
