@@ -119,9 +119,12 @@ jobs:
             MINIBOT_IMAGE="ghcr.io/$GITHUB_ACTOR/minibot:$IMAGE_TAG" \
               docker compose -f docker-compose.prod.yml pull minibot
 
-            # Stop old containers before starting new ones to avoid 409 Telegram conflict
+            # Stop old containers — wait up to 15s for graceful Telegram long-poll shutdown
             MINIBOT_IMAGE="ghcr.io/$GITHUB_ACTOR/minibot:$IMAGE_TAG" \
-              docker compose -f docker-compose.prod.yml down --remove-orphans
+              docker compose -f docker-compose.prod.yml down --remove-orphans --timeout 15
+
+            # Give Telegram time to close the old long-poll session before the new one connects
+            sleep 5
 
             # Start with the new image
             MINIBOT_IMAGE="ghcr.io/$GITHUB_ACTOR/minibot:$IMAGE_TAG" \

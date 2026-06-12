@@ -27,6 +27,7 @@ services:
   minibot:
     image: ${MINIBOT_IMAGE:?MINIBOT_IMAGE is required}
     restart: unless-stopped
+    stop_grace_period: 15s
     env_file:
       - .env
     environment:
