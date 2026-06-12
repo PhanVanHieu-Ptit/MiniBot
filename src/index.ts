@@ -11,7 +11,7 @@ async function main() {
   const shutdown = (signal: string) => {
     logger.info(`${signal} received, stopping bot`);
     // Force exit after 5s if graceful stop hangs
-    const timer = setTimeout(() => process.exit(1), 5000);
+    const timer = setTimeout(() => process.exit(1), 12000);
     timer.unref();
     bot
       .stop()
