@@ -39,7 +39,8 @@
       "Bash(npm approve-scripts *)",
       "Bash(DATABASE_URL=\"postgresql://localhost:5432/minibot\" npm run db:generate)",
       "Bash(grep -E '\\\\.\\(yml|yaml|json|dockerfile|Dockerfile|sh\\)$')",
-      "Bash(grep -v \"^$\")"
+      "Bash(grep -v \"^$\")",
+      "Bash(xargs cat)"
     ],
     "additionalDirectories": [
       "/Users/phanvanhieu/.claude"

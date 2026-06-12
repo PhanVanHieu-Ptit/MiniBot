@@ -119,7 +119,11 @@ jobs:
             MINIBOT_IMAGE="ghcr.io/$GITHUB_ACTOR/minibot:$IMAGE_TAG" \
               docker compose -f docker-compose.prod.yml pull minibot
 
-            # Restart with the new image
+            # Stop old containers before starting new ones to avoid 409 Telegram conflict
+            MINIBOT_IMAGE="ghcr.io/$GITHUB_ACTOR/minibot:$IMAGE_TAG" \
+              docker compose -f docker-compose.prod.yml down --remove-orphans
+
+            # Start with the new image
             MINIBOT_IMAGE="ghcr.io/$GITHUB_ACTOR/minibot:$IMAGE_TAG" \
               docker compose -f docker-compose.prod.yml up -d --no-build
 
