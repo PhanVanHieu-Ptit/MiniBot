@@ -5,3 +5,7 @@ data/
 *.db
 *.db-shm
 *.db-wal
+
+# GCP Service Account keys — never commit
+*-sa-key.json
+gcp-sa-key.json

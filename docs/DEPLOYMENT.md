@@ -8,7 +8,8 @@
 |---|---|
 | Node.js ≥ 22 | `node --version` |
 | Google Cloud project | With Vertex AI API enabled |
-| ADC configured | `gcloud auth application-default login` |
+| ADC configured (local) | `gcloud auth application-default login` |
+| GCP Service Account key (VPS) | See [GCP Auth on VPS](#gcp-auth-on-vps) below |
 | Telegram bot token | Create via @BotFather |
 
 ## Environment Variables
@@ -103,8 +104,33 @@ There is no HTTP health endpoint — the bot uses long-polling. To verify it's r
 | Rate limiter counters | **Reset** (in-memory) |
 | Pending Telegram updates | Replayed by Telegram (long-poll) |
 
+## GCP Auth on VPS
+
+Locally, ADC works via `gcloud auth application-default login`. On VPS the Docker container has no gcloud credentials, so a **Service Account key** is required.
+
+```bash
+# 1. Create Service Account
+gcloud iam service-accounts create minibot-sa \
+  --project=YOUR_PROJECT_ID \
+  --display-name="MiniBot Vertex AI"
+
+# 2. Grant Vertex AI User role
+gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
+  --member="serviceAccount:minibot-sa@YOUR_PROJECT_ID.iam.gserviceaccount.com" \
+  --role="roles/aiplatform.user"
+
+# 3. Download key JSON
+gcloud iam service-accounts keys create gcp-sa-key.json \
+  --iam-account=minibot-sa@YOUR_PROJECT_ID.iam.gserviceaccount.com
+
+# 4. Upload to VPS (keep outside repo — never commit this file)
+scp gcp-sa-key.json user@VPS_HOST:/opt/minibot/gcp-sa-key.json
+```
+
+`docker-compose.prod.yml` mounts `/opt/minibot/gcp-sa-key.json` → `/app/gcp-sa-key.json:ro` and sets `GOOGLE_APPLICATION_CREDENTIALS` automatically.
+
 ## Known Deployment Risks
 
 - SQLite is a single file — ensure backups before schema migrations
 - `ALLOWED_USER_IDS` empty = open bot, any Telegram user triggers Vertex AI calls
-- ADC must be available inside Docker; mount service account key or use Workload Identity
+- Never commit `gcp-sa-key.json` — it grants Vertex AI access to your GCP project
