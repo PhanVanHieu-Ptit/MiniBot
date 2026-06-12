@@ -32,6 +32,9 @@ services:
     environment:
       - NODE_ENV=production
       - LOG_LEVEL=info
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/gcp-sa-key.json
+    volumes:
+      - /opt/minibot/gcp-sa-key.json:/app/gcp-sa-key.json:ro
     depends_on:
       postgres:
         condition: service_healthy
