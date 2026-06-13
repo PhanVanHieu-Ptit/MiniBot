@@ -87,6 +87,9 @@ export class GeminiProvider implements IAIProvider {
     const vertexAI = new VertexAI({
       project: config.GOOGLE_CLOUD_PROJECT,
       location: config.GOOGLE_CLOUD_LOCATION,
+      googleAuthOptions: {
+        scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+      },
     });
     this.model = vertexAI.getGenerativeModel({
       model: config.GEMINI_MODEL,
